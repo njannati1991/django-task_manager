@@ -1,0 +1,6 @@
+local*
+.vs*
+__py*
+venv
+env
+db*
