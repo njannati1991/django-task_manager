@@ -1,9 +1,34 @@
 {% extends "base.html" %}
 
+{% block title %} {{ workspace.name }} {% endblock %}
+
 {% block content %}
 
 <h2>{{ workspace.name }}</h2>
 
-<p>Owner: {{ workspace.owner }}</p>
+<p class="text-muted">Owner User: {{ workspace.owner.username }}</p>
+<p class="text-muted">Owner Email: {{ workspace.owner.email }}</p>
+
+<hr>
+
+<h4>Projects</h4>
+
+<a href="{% url 'project-create' workspace.id %}" class="btn btn-primary btn-sm mb-3">
+    Create Project
+</a>
+
+<ul class="list-group">
+    {% for project in workspace.projects.all %}
+        <li class="list-group-item">
+            <a href="{% url 'project-detail' project.id %}">
+            {{ project.name }}
+            </a>
+        </li>
+    {% empty %}
+        <li class="list-group-item">
+            No projects yet.
+        </li>
+    {% endfor %}
+</ul>
 
 {% endblock %}

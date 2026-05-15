@@ -19,7 +19,10 @@ class WorkspaceDetailView(DetailView):
     model = Workspace
     template_name = 'workspaces/workspace_detail.html'
     context_object_name = 'workspace'
-    
+
+
+    def get_queryset(self):
+        return Workspace.objects.prefetch_related('projects')
 
 
 
@@ -32,8 +35,7 @@ class WorkspaceCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        form.instance.members.add(self.request.user)
         response = super().form_valid(form)
-        
+        form.instance.members.add(self.request.user)        
 
         return response

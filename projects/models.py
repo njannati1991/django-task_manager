@@ -9,6 +9,7 @@ class Project(BaseModel):
 
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='projects')
     name = models.CharField(max_length=255)
+    descriptions = models.TextField(null=True, blank=True)
     slug = models.SlugField()
 
     def save(self, *args, **kwargs):
