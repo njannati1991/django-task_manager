@@ -19,7 +19,7 @@ class Task(BaseModel):
         HIGH = 'high', 'High'
 
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tesks')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks')
     assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='tasks')
 
     title = models.CharField(max_length=255)
@@ -32,7 +32,7 @@ class Task(BaseModel):
     def __str__(self):
         return self.title
     
-    
+
 
 
 

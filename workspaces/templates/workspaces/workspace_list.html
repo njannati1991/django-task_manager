@@ -1,0 +1,19 @@
+<h1>Workspaces</h1>
+
+<a href="{% url 'workspace-create' %}">
+Create Workspace
+</a>
+
+<ul>
+
+{% for workspace in workspaces %}
+
+<li>
+
+{{ workspace.name }}
+
+</li>
+
+{% endfor %}
+
+</ul>
