@@ -22,9 +22,45 @@
     Create Task
 </a>
 
+
+<form method="get">
+
+<input
+    type="text"
+    name="search"
+    placeholder="Search..."
+    value="{{ search_query }}"
+>
+
+<select name="status">
+
+<option value="">All Status</option>
+<option value="todo">Todo</option>
+<option value="in_progress">In Progress</option>
+<option value="done">Done</option>
+
+</select>
+
+<select name="priority">
+
+<option value="">All Priority</option>
+<option value="low">Low</option>
+<option value="medium">Medium</option>
+<option value="high">High</option>
+
+</select>
+
+<button type="submit">
+Filter
+</button>
+
+</form>
+
+
+
 <ul class="list-group">
 
-{% for task in project.tasks.all %}
+{% for task in page_obj %}
 
 <li class="list-group-item">
 
@@ -35,6 +71,18 @@
 </span>
 
 </li>
+<a href="{% url 'task-update' task.id %}" class="btn btn-sm btn-warning">
+Edit
+</a>
+
+<form method="post" action="{% url 'task-delete' task.id %}">
+    {% csrf_token %}
+    <button class="btn btn-danger btn-sm">
+        Delete
+    </button>
+</form>
+
+
 
 {% empty %}
 
@@ -45,5 +93,32 @@ No tasks yet
 {% endfor %}
 
 </ul>
+<div class="pagination">
+
+
+
+
+
+{% if page_obj.has_previous %}
+
+<a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}">
+Previous
+</a>
+
+{% endif %}
+
+<span>
+Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+</span>
+
+{% if page_obj.has_next %}
+
+<a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}">
+Next
+</a>
+
+{% endif %}
+
+
 
 {% endblock %}

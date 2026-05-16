@@ -4,6 +4,10 @@ from django.views.generic import CreateView, DetailView
 from django.http import Http404
 from django.urls import reverse
 
+from django.db.models import Prefetch, Q
+from django.core.paginator import Paginator
+
+from tasks.models import Task
 from workspaces.models import Workspace
 from .forms import ProjectCreateForm
 from .models import Project
@@ -40,11 +44,53 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     template_name = 'projects/project_detail.html'
     context_object_name = 'project'
 
+    
+
     def get_queryset(self):
         return Project.objects.select_related(
             'workspace'
         ).prefetch_related(
-                'tasks'
-            ).filter(
-                    workspace__members = self.request.user
+                Prefetch(
+                    'tasks', queryset= Task.objects.filter(is_active=True)
                 )
+            ).filter(
+                    workspace__members = self.request.user,
+                )
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        tasks = self.object.tasks.filter(is_active= True)
+
+        search_query = self.request.GET.get('search')
+
+        status = self.request.GET.get('status')
+        priority = self.request.GET.get('priority')
+        assigned_to = self.request.GET.get('assigned_to')
+
+
+        if search_query:
+            tasks = tasks.filter(
+                Q(title__icontains = search_query) |
+                Q(description__icontains = search_query)
+            )
+
+        if status:
+            tasks = tasks.filter(status=status)
+        
+        if priority:
+            tasks = tasks.filter(priority=priority)
+
+        if assigned_to:
+            tasks = tasks.filter(assigned_to=assigned_to)
+
+
+        paginator = Paginator(tasks, 5)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+        
+        
+        return context
+    
+
