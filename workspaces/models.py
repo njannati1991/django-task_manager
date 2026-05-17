@@ -37,7 +37,7 @@ class WorkspaceMember(BaseModel):
         unique_together = ("members", "workspace")
 
     def __str__(self):
-        return f"{self.user} - {self.workspace} ({self.role})"
+        return f"{self.members.username} - {self.workspace} ({self.role})"
 
 
 

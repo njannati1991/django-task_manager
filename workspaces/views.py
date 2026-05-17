@@ -3,6 +3,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.db import transaction
+
 from workspaces.models import Workspace, WorkspaceMember
 from .permissions import WorkspacePermissionMixin
 from .forms import AddMemberForm
@@ -37,11 +39,22 @@ class WorkspaceCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('workspace-list')
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
+        with transaction.atomic():
+            form.instance.owner = self.request.user
+            self.object = form.save()
+
+            WorkspaceMember.objects.create(
+                members = self.object.owner,
+                workspace = self.object,
+                role = 'owner',
+            )
+        
         response = super().form_valid(form)
-      
 
         return response
+    
+
+    
     
 
 class AddMemberView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView):

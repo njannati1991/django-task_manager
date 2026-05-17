@@ -19,6 +19,7 @@ class WorkspaceAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'name')
 
     search_fields = ('name', 'owner__username')
+    
 
 
     # def get_member_name(self, obj):
