@@ -9,22 +9,17 @@ User = get_user_model()
 
 class Workspace(BaseModel):
 
-    class Role(models.TextChoices):
-        OWNER = 'owner', 'Owner'
-        ADMIN = 'admin', 'Admin'
-        MEMBER = 'member', 'Member'
-        VIEWER = 'viewer', 'Viewer'
 
     name = models.CharField(max_length=255)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_workspaces')
-    members = models.ManyToManyField(User, related_name='workspaces', blank=True, through='WorkspaceMemberShip')
+    
 
     def __str__(self):
         return self.name
     
 
 
-class WorkspaceMembership(BaseModel):
+class WorkspaceMember(BaseModel):
 
     class Role(models.TextChoices):
         OWNER = "owner", "Owner"
@@ -32,14 +27,14 @@ class WorkspaceMembership(BaseModel):
         MEMBER = "member", "Member"
         VIEWER = "viewer", "Viewer"
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    members = models.ForeignKey(User, on_delete=models.CASCADE, related_name='workspaces')
 
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name="memberships")
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.MEMBER)
 
     class Meta:
-        unique_together = ("user", "workspace")
+        unique_together = ("members", "workspace")
 
     def __str__(self):
         return f"{self.user} - {self.workspace} ({self.role})"

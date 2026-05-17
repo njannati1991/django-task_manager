@@ -44,7 +44,8 @@ class TaskCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView):
         return kwargs
     
     def get_workspace(self):
-        return get_object_or_404(Workspace, id=self.kwargs['workspace_id'])
+        project = get_object_or_404(Project, id=self.kwargs['project_id'])
+        return project.workspace
     
 
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
