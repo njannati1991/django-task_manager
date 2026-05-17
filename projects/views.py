@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView
 from django.http import Http404
@@ -11,14 +11,16 @@ from tasks.models import Task
 from workspaces.models import Workspace
 from .forms import ProjectCreateForm
 from .models import Project
+from workspaces.permissions import WorkspacePermissionMixin
 
 
 
 
-class ProjectCreateView(LoginRequiredMixin, CreateView):
+class ProjectCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView):
     model = Project
     form_class = ProjectCreateForm
     template_name = 'projects/project_create.html'
+    allowed_roles = ["owner", "admin"]
 
     def dispatch(self, request, *args, **kwargs):
 
@@ -37,6 +39,10 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('workspace-detail', kwargs={'pk': self.workspace.pk})
+    
+
+    def get_workspace(self):
+        return get_object_or_404(Workspace, id=self.kwargs['workspace_id'])
     
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):

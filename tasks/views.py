@@ -5,12 +5,15 @@ from django.urls import reverse
 from django.http import Http404
 
 from projects.models import Project
+from workspaces.models import Workspace
+from workspaces.permissions import WorkspacePermissionMixin
 
 from .forms import TaskForm
 from .models import Task
 
 
-class TaskCreateView(LoginRequiredMixin, CreateView):
+
+class TaskCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView):
     model = Task
     template_name = 'tasks/task_create.html'
     form_class = TaskForm
@@ -39,6 +42,9 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['project'] = self.project
         return kwargs
+    
+    def get_workspace(self):
+        return get_object_or_404(Workspace, id=self.kwargs['workspace_id'])
     
 
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
