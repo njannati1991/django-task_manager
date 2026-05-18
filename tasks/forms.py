@@ -1,7 +1,9 @@
 from django import forms
-
+from django.contrib.auth import get_user_model
 from .models import Task
 
+
+User = get_user_model()
 
 class TaskForm(forms.ModelForm):
 
@@ -15,4 +17,4 @@ class TaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if project:
-            self.fields['assigned_to'].queryset = project.workspace.members.all()
+            self.fields['assigned_to'].queryset = User.objects.filter(workspaces__workspace = project.workspace)

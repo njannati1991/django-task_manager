@@ -46,7 +46,8 @@ class ProjectCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView
     
 
 
-class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+class ProjectUpdateView(LoginRequiredMixin,WorkspacePermissionMixin, UpdateView):
+    allowed_roles = ['owner']
     model = Project
     context_object_name = 'project'
     template_name = 'projects/project_update.html'
@@ -58,7 +59,8 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     
 
 
-class ProjectDeleteView(LoginRequiredMixin, DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, WorkspacePermissionMixin, DeleteView):
+    allowed_roles = ['owner']
     model = Project
     pk_url_kwarg = 'project_id'
     def get_success_url(self):

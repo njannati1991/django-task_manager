@@ -64,7 +64,7 @@ Filter
 
 <li class="list-group-item">
 
-<strong>{{ task.title }}</strong>
+<strong><a href="{% url 'task-detail' task.project.pk task.pk %}">{{ task.title }}</a></strong>
 
 <span class="badge bg-secondary">
 {{ task.status }}
