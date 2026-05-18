@@ -1,13 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, FormView, ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth import get_user_model
 from django.db import transaction
 
 from workspaces.models import Workspace, WorkspaceMember
 from .permissions import WorkspacePermissionMixin
 from .forms import AddMemberForm
+
+
+User = get_user_model()
 
 class WorkspaceListView(LoginRequiredMixin, ListView):
     model = Workspace
@@ -26,7 +29,7 @@ class WorkspaceDetailView(LoginRequiredMixin, DetailView):
 
 
     def get_queryset(self):
-        return Workspace.objects.prefetch_related('projects')
+        return Workspace.objects.prefetch_related('projects', 'memberships')
 
 
 
@@ -57,24 +60,44 @@ class WorkspaceCreateView(LoginRequiredMixin, CreateView):
     
     
 
-class AddMemberView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView):
-
-    model = WorkspaceMember
-    form_class = AddMemberForm
+class AddMemberView(LoginRequiredMixin, WorkspacePermissionMixin, FormView):
+    
     template_name = 'workspaces/add_member.html'
-
+    form_class = AddMemberForm
+    
+    
     allowed_roles = ['owner', 'admin']
 
     def get_workspace(self):
-        return get_object_or_404(Workspace, id= self.kwargs['workspace_id'])
+        return get_object_or_404(Workspace, id=self.kwargs['workspace_id'])
+
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['workspace'] = self.get_workspace()
+        return kwargs
+
+
 
     def form_valid(self, form):
-        
+        role = form.cleaned_data['role']
+        user = get_object_or_404(User, username=form.cleaned_data['username'])
         workspace = self.get_workspace()
-        form.instance.workspace = workspace
+        WorkspaceMember.objects.create(
+            workspace = workspace,
+            members = user,
+            role = role
+        )
         
         return super().form_valid(form)
+    
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['workspace'] = self.get_workspace()
+
+        return data
 
 
     def get_success_url(self):
-        return reverse('workspace-detail', kwargs={'pk': self.kwargs['workspace_id']})
+        return reverse('workspace-detail', kwargs={'pk':self.kwargs['workspace_id']})

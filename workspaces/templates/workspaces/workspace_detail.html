@@ -31,4 +31,13 @@
     {% endfor %}
 </ul>
 
+<ul class="list-group">
+    Members:
+    {% for member in workspace.memberships.all %}
+        <li class="list-group-item">
+            Member: {{ member.members.username }} - Role: {{member.role}}
+        </li>
+    {% endfor %}
+</ul>
+
 {% endblock %}

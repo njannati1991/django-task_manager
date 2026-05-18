@@ -1,5 +1,7 @@
 <h2>Add Member</h2>
 
+<h3>Workspace: {{workspace.name}}</h3>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

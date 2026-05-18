@@ -14,6 +14,6 @@ class UserAdmin(UserAdmin):
 
     add_fieldsets = UserAdmin.add_fieldsets + (
         ('Extra Info', {
-            'fields': ('nationa_id', 'mobile', 'birthday')
+            'fields': ('national_id', 'email', 'mobile', 'birthday')
         }),
     )
