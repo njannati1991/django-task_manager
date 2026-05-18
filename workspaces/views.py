@@ -82,7 +82,36 @@ class WorkspaceCreateView(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
 
         return response
+
+
+class WorkspaceUpdateView(LoginRequiredMixin, WorkspacePermissionMixin, UpdateView):
+
+    allowed_roles = ['owner']
+
+    model = Workspace
+    fields = ['name']
+    template_name = 'workspaces/workspace_update.html'
+    context_object_name = 'workspace'
+    success_url = reverse_lazy('workspace-list')
+
+    def get_object(self, queryset = None):
+        return get_object_or_404(
+            Workspace,
+            id = self.kwargs['workspace_pk']
+        )
+
     
+class WorkspaceDeleteView(LoginRequiredMixin, WorkspacePermissionMixin, DeleteView):
+    allowed_roles = ['owner']
+
+    model = Workspace
+    success_url = reverse_lazy('workspace-list')
+
+    def get_object(self, queryset = None):
+        return get_object_or_404(
+            Workspace, 
+            id = self.kwargs['workspace_pk']
+        )
 
     
     

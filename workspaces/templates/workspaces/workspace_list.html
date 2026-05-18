@@ -17,7 +17,6 @@
 
             <div>
                 {% if workspace.user_membership %}
-                    {# چون to_attr='user_membership' لیست برمی‌گرداند، اندیس 0 می‌خواهیم #}
                     Your Role: {{ workspace.user_membership.0.role }}
                 {% elif workspace.owner == user %}
                     Your Role: owner
@@ -26,7 +25,14 @@
                 {% endif %}
 
                 <a href="{% url 'add-member' workspace.pk %}" class="btn btn-sm btn-warning ms-3">Add Member</a>
+                <a href="{% url 'workspace-update' workspace.pk %}" class="btn btn-sm btn-warning ms-3">Update workspace</a>
+                
             </div>
+            <form action="{% url 'workspace-delete' workspace.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Delete Workspace</button>
+
+                </form>
         </li>
 
     {% empty %}
