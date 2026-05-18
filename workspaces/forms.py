@@ -28,4 +28,12 @@ class AddMemberForm(forms.Form):
         except User.DoesNotExist():
             raise forms.ValidationError('User not found.')
         return user
+    
+
+
+class UpdateMemberForm(forms.ModelForm):
+
+    class Meta:
+        model = WorkspaceMember
+        fields = ('members', 'role')
 

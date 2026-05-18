@@ -1,5 +1,14 @@
+{% extends 'base.html' %}
+
 <h2>Add Member</h2>
 
+
+{% block title %}
+    Add Member
+{% endblock %}
+
+
+{% block content %}
 <h3>Workspace: {{workspace.name}}</h3>
 
 <form method="post">
@@ -10,3 +19,5 @@
         Add Member
     </button>
 </form>
+
+{% endblock %}

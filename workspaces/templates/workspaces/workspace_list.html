@@ -9,7 +9,7 @@
 {% for workspace in workspaces %}
 <li class="list-group-item">
     <a href="{% url 'workspace-detail' workspace.id %}">{{ workspace.name }}</a> | 
-    <a href="{% url 'add-member' workspace.id %}" class="btn btn-sm btn-warning">Add Member</a>
+    <a href="{% url 'add-member' workspace.pk %}" class="btn btn-sm btn-warning">Add Member</a>
 </li> 
 
 {% empty %}

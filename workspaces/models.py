@@ -33,6 +33,8 @@ class WorkspaceMember(BaseModel):
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.MEMBER)
 
+    is_active = models.BooleanField(default=True)
+
     class Meta:
         unique_together = ("members", "workspace")
 

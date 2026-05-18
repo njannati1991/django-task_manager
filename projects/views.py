@@ -24,7 +24,7 @@ class ProjectCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView
 
     def dispatch(self, request, *args, **kwargs):
 
-        self.workspace = Workspace.objects.filter(id=self.kwargs['workspace_id'], members=request.user).first()
+        self.workspace = Workspace.objects.filter(id=self.kwargs['workspace_id'], memberships__members=request.user).first()
 
         if not self.workspace:
             raise Http404('Workspace not found.')

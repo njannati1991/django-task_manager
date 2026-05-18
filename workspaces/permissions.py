@@ -1,11 +1,18 @@
 from django.http import Http404
-from .models import WorkspaceMember
+from django.shortcuts import get_object_or_404
+from .models import Workspace, WorkspaceMember
 
 
 class WorkspacePermissionMixin:
 
     allowed_roles = []
 
+
+    def get_workspace(self):
+
+        workspace_id = self.kwargs.get('workspace_pk') or self.kwargs.get('workspace_id') or self.kwargs.get('pk')
+        return get_object_or_404(Workspace, id=workspace_id)
+ 
     def dispatch(self, request, *args, **kwargs):
 
         workspace = self.get_workspace()

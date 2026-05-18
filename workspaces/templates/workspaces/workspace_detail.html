@@ -16,6 +16,7 @@
 <a href="{% url 'project-create' workspace.id %}" class="btn btn-primary btn-sm mb-3">
     Create Project
 </a>
+<a href="{% url 'add-member' workspace.pk %}" class="btn btn-sm btn-warning mb-3">Add Member</a>
 
 <ul class="list-group">
     {% for project in workspace.projects.all %}
@@ -35,7 +36,13 @@
     Members:
     {% for member in workspace.memberships.all %}
         <li class="list-group-item">
-            Member: {{ member.members.username }} - Role: {{member.role}}
+            {{ member.members.username }} - {{member.role}}
+            <a href="{% url 'update-member' workspace.pk member.members.username %}">Update</a> |
+            <form action="{% url 'delete-member' workspace.pk member.members.username %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm"> Delete Member </button>
+            </form> 
+            
         </li>
     {% endfor %}
 </ul>

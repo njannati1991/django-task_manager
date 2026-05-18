@@ -1,13 +1,14 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, FormView, ListView, DetailView, View
+from django.views.generic import CreateView, DeleteView, FormView, ListView, DetailView, UpdateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.db.models import Prefetch
 
 from workspaces.models import Workspace, WorkspaceMember
 from .permissions import WorkspacePermissionMixin
-from .forms import AddMemberForm
+from .forms import AddMemberForm, UpdateMemberForm
 
 
 User = get_user_model()
@@ -29,7 +30,12 @@ class WorkspaceDetailView(LoginRequiredMixin, DetailView):
 
 
     def get_queryset(self):
-        return Workspace.objects.prefetch_related('projects', 'memberships')
+        return Workspace.objects.prefetch_related(
+            'projects',
+            Prefetch(
+                'memberships', queryset=WorkspaceMember.objects.filter(is_active=True),
+            )
+        )
 
 
 
@@ -68,8 +74,8 @@ class AddMemberView(LoginRequiredMixin, WorkspacePermissionMixin, FormView):
     
     allowed_roles = ['owner', 'admin']
 
-    def get_workspace(self):
-        return get_object_or_404(Workspace, id=self.kwargs['workspace_id'])
+    # def get_workspace(self):
+    #     return get_object_or_404(Workspace, id=self.kwargs['workspace_pk'])
 
 
     def get_form_kwargs(self):
@@ -100,4 +106,43 @@ class AddMemberView(LoginRequiredMixin, WorkspacePermissionMixin, FormView):
 
 
     def get_success_url(self):
-        return reverse('workspace-detail', kwargs={'pk':self.kwargs['workspace_id']})
+        return reverse('workspace-detail', kwargs={'pk':self.kwargs['workspace_pk']})
+    
+
+class DeleteMemberView(LoginRequiredMixin,WorkspacePermissionMixin, DeleteView):
+
+    allowed_roles = ['owner', 'admin']
+
+    model = WorkspaceMember
+    
+    def get_object(self, queryset = None):
+        return get_object_or_404(
+            WorkspaceMember,
+            workspace__id = self.kwargs['workspace_pk'],
+            members__username = self.kwargs['username']
+        )
+    
+    def get_success_url(self):
+        return reverse('workspace-detail', kwargs={'pk':self.kwargs['workspace_pk']})
+
+
+class UpdateMemberView(LoginRequiredMixin, WorkspacePermissionMixin, UpdateView):
+    
+    
+    allowed_roles = ['owner', 'admin']
+    model = WorkspaceMember
+    form_class = UpdateMemberForm
+    template_name = 'workspaces/update_member.html'
+
+    
+
+    def get_object(self, queryset = None):
+        return get_object_or_404(
+            WorkspaceMember,
+            workspace__id = self.kwargs['workspace_pk'],
+            members__username = self.kwargs['username']
+        )
+    
+    def get_success_url(self):
+        return reverse('workspace-detail', kwargs={'pk':self.kwargs['workspace_pk']})
+        
