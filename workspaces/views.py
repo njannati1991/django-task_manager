@@ -4,7 +4,7 @@ from django.views.generic import CreateView, DeleteView, FormView, ListView, Det
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 
 from workspaces.models import Workspace, WorkspaceMember
 from .permissions import WorkspacePermissionMixin
@@ -20,7 +20,28 @@ class WorkspaceListView(LoginRequiredMixin, ListView):
 
 
     def get_queryset(self):
-        return Workspace.objects.filter(owner=self.request.user)
+        user = self.request.user
+
+        user_memberships = WorkspaceMember.objects.filter(members=user).select_related('workspace')
+
+        return (
+            Workspace.objects.filter(
+                Q(owner=user) |
+                Q(memberships__members=user)
+            )
+            .prefetch_related(
+                Prefetch('memberships', queryset=user_memberships, to_attr='user_membership')
+            )
+            .distinct()
+        )
+    
+    # def get_context_data(self, **kwargs):
+    #     data = super().get_context_data(**kwargs)
+    #     data['role'] = WorkspaceMember.objects.filter(
+    #         members = self.request.user,
+    #         Workspace = self.kwargs['workspace']
+    #     ).values('role')
+    #     return data
     
 
 class WorkspaceDetailView(LoginRequiredMixin, DetailView):

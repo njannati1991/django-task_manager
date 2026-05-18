@@ -60,7 +60,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
                     'tasks', queryset= Task.objects.filter(is_active=True)
                 )
             ).filter(
-                    workspace__members = self.request.user,
+                    workspace__memberships__members = self.request.user,
                 )
     
     def get_context_data(self, **kwargs):
