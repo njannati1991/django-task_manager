@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from django.http import Http404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from django.db.models import Prefetch, Q
 from django.core.paginator import Paginator
@@ -43,6 +43,26 @@ class ProjectCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView
 
     def get_workspace(self):
         return get_object_or_404(Workspace, id=self.kwargs['workspace_id'])
+    
+
+
+class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+    model = Project
+    context_object_name = 'project'
+    template_name = 'projects/project_update.html'
+    fields = ['name', 'descriptions']
+    pk_url_kwarg = 'project_id'
+    
+    def get_success_url(self):
+        return reverse_lazy('workspace-detail', kwargs={'pk': self.object.workspace.id})
+    
+
+
+class ProjectDeleteView(LoginRequiredMixin, DeleteView):
+    model = Project
+    pk_url_kwarg = 'project_id'
+    def get_success_url(self):
+        return reverse_lazy('workspace-detail', kwargs={'pk': self.object.workspace.id})
     
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
