@@ -15,12 +15,12 @@ class WorkspacePermissionMixin:
  
     def dispatch(self, request, *args, **kwargs):
 
-        workspace = self.get_workspace()
+        self.workspace = self.get_workspace()
 
         try:
             membership = WorkspaceMember.objects.get(
                 members=request.user,
-                workspace=workspace
+                workspace=self.workspace
             )
         except WorkspaceMember.DoesNotExist:
             raise Http404

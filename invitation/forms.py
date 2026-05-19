@@ -14,6 +14,11 @@ class InviteMemberForm(forms.ModelForm):
         fields = ('email', 'role')
 
 
+    def __init__(self, *args, **kwargs):
+        self.workspace = kwargs.pop('workspace')
+        super().__init__(*args, **kwargs)
+
+
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
 
@@ -22,4 +27,3 @@ class InviteMemberForm(forms.ModelForm):
         return email
     
 
-    

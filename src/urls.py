@@ -23,6 +23,7 @@ urlpatterns = [
     path('workspaces/', include('workspaces.urls')),
     path('projects/', include('projects.urls')),
     path('tasks/', include('tasks.urls')),
-    
+    path('invite/', include('invitation.urls')),
+       
     
 ]

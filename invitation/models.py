@@ -14,7 +14,7 @@ class WorkspaceInvitation(BaseModel):
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='invitations')
     email = models.EmailField()
     role = models.CharField(max_length=20, choices=WorkspaceMember.Role, default=WorkspaceMember.Role.MEMBER)
-    invated_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    invited_by = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     is_accepted = models.BooleanField(default=False)

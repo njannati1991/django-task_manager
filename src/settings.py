@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'workspaces.apps.WorkspacesConfig',
     'tasks.apps.TasksConfig',
+    'invitation.apps.InvitationConfig',
 
 ]
 
@@ -136,3 +137,4 @@ LOGIN_REDIRECT_URL = '/workspaces/'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@example.com'

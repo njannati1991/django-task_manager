@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Invite Member{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Invite Member to {{ view.workspace.name }}</h2>
+
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">
+            Send Invitation
+        </button>
+
+        <a href="{% url 'workspace-detail' view.get_workspace.pk %}" class="btn btn-secondary">
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}
