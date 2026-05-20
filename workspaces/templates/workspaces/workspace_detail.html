@@ -1,59 +1,128 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %} {{ workspace.name }} {% endblock %}
+{% block title %}{{ workspace.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'workspaces/css/workspace_detail.css' %}">
+{% endblock %}
 
 {% block content %}
+<section class="workspace-detail-page">
+    <div class="workspace-detail-container">
 
-<h2>{{ workspace.name }}</h2>
+        <!-- Hero -->
+        <div class="workspace-hero">
+            <div class="hero-content">
+                <h1>{{ workspace.name }}</h1>
+                <h4>Owner: {{ workspace.owner }}</h4>
 
-<p class="text-muted">Owner User: {{ workspace.owner.username }}</p>
-<p class="text-muted">Owner Email: {{ workspace.owner.email }}</p>
-
-<hr>
-
-<h4>Projects</h4>
-
-<a href="{% url 'project-create' workspace.id %}" class="btn btn-primary btn-sm mb-3">
-    Create Project
-</a>
-<a href="{% url 'add-member' workspace.pk %}" class="btn btn-sm btn-warning mb-3">Add Member</a>
-
-<ul class="list-group">
-    {% for project in workspace.projects.all %}
-        <li class="list-group-item">
-            <a href="{% url 'project-detail' project.id %}">
-            {{ project.name }}
-            </a>
-            <div style="display: inline-flex;">
-                <a href="{% url 'project-update' project.workspace.id project.id %}" class="btn btn-sm btn-warning mb-3">Update Projecet</a> | 
-                <form action="{% url 'project-delete' project.workspace.id project.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger mb-3">Delete Project</button>
-            </form>
+                {% if workspace.description %}
+                    <p>{{ workspace.description }}</p>
+                {% else %}
+                    <p class="muted-text">No description provided for this workspace.</p>
+                {% endif %}
             </div>
-        </li>
-    
-        
-        {% empty %}
-        <li class="list-group-item">
-            No projects yet.
-        </li>
-    {% endfor %}
-</ul>
 
-<ul class="list-group">
-    Members:
-    {% for member in workspace.memberships.all %}
-        <li class="list-group-item">
-            {{ member.members.username }} - {{member.role}}
-            <a href="{% url 'update-member' workspace.pk member.members.username %}">Update</a> |
-            <form action="{% url 'delete-member' workspace.pk member.members.username %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm"> Delete Member </button>
-            </form> 
-            
-        </li>
-    {% endfor %}
-</ul>
+            <div class="hero-actions">
+                <a href="{% url 'workspace-list' %}" class="btn btn-outline">Back</a>
+                <a href="{% url 'workspace-update' workspace.pk %}" class="btn btn-warning">Edit Workspace</a>
+                <a href="{% url 'invite-member' workspace.pk %}" class="btn btn-primary">Invite Member</a>
+            </div>
+        </div>
 
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>{{ total_members }}</h3>
+                <p>Total Members</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ total_tasks }}</h3>
+                <p>Total Tasks</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ pending_invitations }}</h3>
+                <p>Pending Invitations</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ user_role|title }}</h3>
+                <p>Your Role</p>
+            </div>
+        </div>
+
+        <div class="workspace-content-grid">
+
+            <!-- Members Section -->
+            <div class="content-card">
+                <div class="section-header">
+                    <h2>Members</h2>
+                    <a href="{% url 'add-member' workspace.pk %}" class="btn btn-sm btn-outline">Add Member</a>
+                </div>
+
+                {% if memberships %}
+                    <div class="member-list">
+                        {% for membership in memberships %}
+                            <div class="member-item">
+                                <div class="member-info">
+                                    <h4>{{ membership.member.username }}</h4>
+                                    <p>{{ membership.member.email }}</p>
+                                </div>
+
+                                <span class="role-badge role-{{ membership.role }}">
+                                    {{ membership.role|title }}
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-text">No members found in this workspace.</p>
+                {% endif %}
+            </div>
+
+            <!-- Tasks Section -->
+            <div class="content-card">
+                <div class="section-header">
+                    <h2>Tasks</h2>
+                    <a href="{% url 'task-create' workspace.pk %}" class="btn btn-sm btn-primary">+ New Task</a>
+                </div>
+
+                {% if tasks %}
+                    <div class="task-list">
+                        {% for task in tasks %}
+                            <div class="task-item">
+                                <div class="task-info">
+                                    <h4>{{ task.title }}</h4>
+                                    <p>
+                                        {% if task.description %}
+                                            {{ task.description|truncatechars:80 }}
+                                        {% else %}
+                                            No description available.
+                                        {% endif %}
+                                    </p>
+                                </div>
+
+                                <div class="task-meta">
+                                    <span class="status-badge status-{{ task.status }}">
+                                        {{ task.status|title }}
+                                    </span>
+
+                                    <a href="{% url 'task_detail' task.pk %}" class="task-link">
+                                        View
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-text">No tasks created yet.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
 {% endblock %}

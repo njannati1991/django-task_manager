@@ -1,24 +1,69 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}
-Create Workspace
+{% block title %}Create Workspace{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'workspaces/css/workspace_create.css' %}">
 {% endblock %}
 
-
 {% block content %}
-<h1>Create Workspace</h1>
+<section class="workspace-form-page">
+    <div class="workspace-form-container">
 
-<form method="post">
+        <!-- Header -->
+        <div class="workspace-form-hero">
+            <h1>Create New Workspace</h1>
+            <p>
+                Set up a new workspace to organize your team, tasks, and projects.
+            </p>
+        </div>
 
-{% csrf_token %}
+        <!-- Form Card -->
+        <div class="workspace-form-card">
+            <form method="post">
+                {% csrf_token %}
 
-{{ form.as_p }}
+                <!-- Non field errors -->
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
 
-<button type="submit">
-Create
-</button>
+                <!-- Name -->
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Workspace Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="field-error">
+                            {{ form.name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
 
-</form>
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="field-error">
+                            {{ form.description.errors }}
+                        </div>
+                    {% endif %}
+                </div>
 
+                <div class="form-actions">
+                    <a href="{% url 'workspace-list' %}" class="btn btn-outline">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        Create Workspace
+                    </button>
+                </div>
+            </form>
+        </div>
 
+    </div>
+</section>
 {% endblock %}

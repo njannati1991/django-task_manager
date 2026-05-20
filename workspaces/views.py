@@ -35,14 +35,6 @@ class WorkspaceListView(LoginRequiredMixin, ListView):
             .distinct()
         )
     
-    # def get_context_data(self, **kwargs):
-    #     data = super().get_context_data(**kwargs)
-    #     data['role'] = WorkspaceMember.objects.filter(
-    #         members = self.request.user,
-    #         Workspace = self.kwargs['workspace']
-    #     ).values('role')
-    #     return data
-    
 
 class WorkspaceDetailView(LoginRequiredMixin, DetailView):
     model = Workspace
@@ -63,7 +55,7 @@ class WorkspaceDetailView(LoginRequiredMixin, DetailView):
 class WorkspaceCreateView(LoginRequiredMixin, CreateView):
 
     model = Workspace
-    fields = ['name']
+    fields = ['name', 'description']
     context_object_name = 'workspace'
     template_name = 'workspaces/workspace_create.html'
     success_url = reverse_lazy('workspace-list')
@@ -89,7 +81,7 @@ class WorkspaceUpdateView(LoginRequiredMixin, WorkspacePermissionMixin, UpdateVi
     allowed_roles = ['owner']
 
     model = Workspace
-    fields = ['name']
+    fields = ['name', 'description']
     template_name = 'workspaces/workspace_update.html'
     context_object_name = 'workspace'
     success_url = reverse_lazy('workspace-list')

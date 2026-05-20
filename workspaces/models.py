@@ -1,6 +1,7 @@
 from django.db import models
 # from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.http import Http404
 from core.models import BaseModel
 
 
@@ -12,10 +13,20 @@ class Workspace(BaseModel):
 
     name = models.CharField(max_length=255)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_workspaces')
+    description = models.TextField(null=True, blank=True)
     
 
     def __str__(self):
         return self.name
+    
+    @classmethod
+    def user_workspace_list(cls, user):
+        return cls.objects.filter(memberships__members= user).prefetch_related('memberships')
+    
+
+    def total_members(self, user):
+        workspaces = self.user_workspace_list(user)
+        # members = 
     
 
 
@@ -27,7 +38,7 @@ class WorkspaceMember(BaseModel):
         MEMBER = "member", "Member"
         VIEWER = "viewer", "Viewer"
 
-    members = models.ForeignKey(User, on_delete=models.CASCADE, related_name='workspaces')
+    members = models.ForeignKey(User, on_delete=models.CASCADE, related_name='memberships')
 
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name="memberships")
 

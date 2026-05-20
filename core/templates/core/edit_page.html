@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Workspaces{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/edit_delete_page.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="workspace-list-page">
+    <div class="workspace-list-container">
+
+        <!-- Header -->
+        <div class="workspace-list-hero">
+            <div>
+                <h1>My Workspaces</h1>
+                <p>
+                    View and manage all the workspaces you are a member of.
+                </p>
+            </div>
+
+            <div class="hero-actions">
+                <a href="{% url 'dashboard' %}" class="btn btn-primary">Dashboard</a>
+                <a href="{% url 'workspace-create' %}" class="btn btn-primary">+ Create Workspace</a>
+            </div>
+        </div>
+
+        <!-- Workspace list -->
+        <div class="workspace-section">
+            <div class="section-header">
+                <h2>All Workspaces</h2>
+                <span class="workspace-count">
+                    {{ workspaces|length }} workspace{{ workspaces|length|pluralize }}
+                </span>
+            </div>
+
+            {% if workspaces %}
+                <div class="workspace-grid">
+                    {% for workspace in workspaces %}
+                        <div class="workspace-card">
+                            <div class="workspace-card-top">
+                                <div>
+                                    <h3>{{ workspace.name }}</h3>
+                                    {% if workspace.description %}
+                                        <p class="workspace-description">{{ workspace.description }}</p>
+                                    {% else %}
+                                        <p class="workspace-description empty-text">
+                                            No description provided.
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="workspace-card-footer">
+                                <a href="{% url 'workspace-detail' workspace.pk %}" class="btn btn-outline">
+                                    View
+                                </a>
+
+                                <a href="{% url 'workspace-update' workspace.pk %}" class="btn btn-warning">
+                                    Edit Workspace
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3>No workspaces found</h3>
+                    <p>
+                        You are not a member of any workspace yet. Start by creating one.
+                    </p>
+                    <a href="{% url 'workspace-create' %}" class="btn btn-primary">
+                        Create Your First Workspace
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}

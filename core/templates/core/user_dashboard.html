@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Task Manager{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-page">
+    <div class="dashboard-container">
+
+        <!-- Hero / Welcome -->
+        <div class="dashboard-hero">
+            <div>
+                <h1>Welcome back, {{ request.user.username }}</h1>
+                <p>
+                    Manage your workspaces, team members, and tasks from one central dashboard.
+                </p>
+            </div>
+
+            <div class="hero-actions">
+                <a href="{% url 'workspace-create' %}" class="btn btn-primary">+ Create Workspace</a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>{{ workspaces.count|default:"0" }}</h3>
+                <p>Total Workspaces</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ total_projects|default:"0" }}</h3>
+                <p>Total Projects</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ total_members|default:"0" }}</h3>
+                <p>Total Members</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ pendig_invite|default:"0" }}</h3>
+                <p>Pending Invitations</p>
+            </div>
+        </div>
+
+        <div class="dashboard-main-grid">
+            <!-- Workspaces -->
+            <div class="dashboard-section workspace-section">
+                <div class="section-header">
+                    <h2>Your Workspaces</h2>
+                    <a href="" class="section-link">Create new</a>
+                </div>
+
+                {% if workspaces %}
+                    <div class="workspace-grid">
+                        {% for workspace in workspaces %}
+                            <div class="workspace-card">
+                                <div class="workspace-card-top">
+                                    <h3>{{ workspace.name }}</h3>
+                                    <span class="role-badge role-{{ item.role|lower }}">
+                                        Owner: {{ workspace.owner }}
+                                    </span>
+
+                                    <span class="role-badge role-{{ item.role|lower }}">
+                                        {% for member in workspace.memberships.all %}
+                                            {% if member.members == request.user %}
+                                                Your Role: {{member.role}}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+
+                                </div>
+
+                                <p class="workspace-description">
+                                    {{ workspace.description|default:"No description provided yet." }}
+                                </p>
+
+                                <div class="workspace-meta">
+                                    <span>Members: {{ workspace.memberships.count|default:"0" }}</span>
+                                    <span>Projects: {{ workspace.projects.count|default:"0" }}</span>
+                                </div>
+
+                                <div class="workspace-actions">
+                                    <a href="{% url 'workspace-detail' workspace.pk %}" class="btn btn-outline">
+                                        Open Workspace
+                                    </a>
+
+                                    <a href="{% url 'invite-member' workspace.pk %}" class="btn btn-outline">
+                                        Invite Member
+                                    </a>
+
+                                    <a href="{% url 'update-member' workspace.pk user.username %}" class="btn btn-outline">
+                                        Manage Roles
+                                    </a>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <h3>No workspace yet</h3>
+                        <p>
+                            Start by creating your first workspace and organize your tasks properly.
+                        </p>
+                        <a href="" class="btn btn-primary">
+                            Create Your First Workspace
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick actions / right side -->
+            <div class="dashboard-sidebar">
+                <div class="dashboard-section quick-actions">
+                    <h2>Quick Actions</h2>
+
+                    <div class="quick-action-list">
+                        <a href="{% url 'workspace-create' %}" class="quick-action-card">
+                            <span class="quick-action-title">Create Workspace</span>
+                            <span class="quick-action-text">Start a new project space</span>
+                        </a>
+
+                        <a href="{% url 'workspace-list' %}" class="quick-action-card">
+                            <span class="quick-action-title">All Workspace</span>
+                            <span class="quick-action-text">Show your workspaces</span>
+                        </a>
+
+                        <a href="{% url 'edit-page' %}" class="quick-action-card">
+                            <span class="quick-action-title">Edit Workspace</span>
+                            <span class="quick-action-text">Edit your workspaces</span>
+                        </a>
+
+                        <a href="{% url 'delete-page' %}" class="quick-action-card">
+                            <span class="quick-action-title">Delete Workspace</span>
+                            <span class="quick-action-text">Delete your workspaces</span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div class="dashboard-section dashboard-note">
+                    <h2>Tips</h2>
+                    <p>
+                        Keep your workspaces organized by separating teams, projects, or clients
+                        into different spaces. Assign roles carefully to maintain security and control.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

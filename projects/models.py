@@ -20,5 +20,9 @@ class Project(BaseModel):
     def __str__(self):
         return self.name
     
+    @classmethod
+    def user_total_projects(cls, user):
+        return Project.objects.filter(workspace__memberships__members = user).count()
+    
 
 

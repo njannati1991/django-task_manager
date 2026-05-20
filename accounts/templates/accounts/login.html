@@ -1,22 +1,52 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %} Login {% endblock %}
-
-
-
+    {% block title %} Login | Task Manager {% endblock %}
+    {% block extra_css %} <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}"> {% endblock %}
+    
 {% block content %}
-<h1>Login</h1>
+<div class="auth-container">
 
-<form method="post">
+    <div class="auth-box">
+        <h2>Login to your account</h2>
 
-    {% csrf_token %}
+        <p class="auth-description">
+            Access your workspace and manage your tasks efficiently.
+        </p>
 
-    {{ form.as_p }}
+        {% if form.errors %}
+            <div class="error-box">
+                Invalid username or password.
+            </div>
+        {% endif %}
 
-    <button type="submit">
-        Login
-    </button>
+        <form method="post">
+            {% csrf_token %}
 
-</form>
+            <div class="form-group">
+                <label>Username</label>
+                {{ form.username }}
+            </div>
 
+            <div class="form-group">
+                <label>Password</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn-primary">
+                Login
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+            <p>
+                Don't have an account?
+                <a href="{% url 'register' %}">Create one</a>
+            </p>
+        </div>
+
+    </div>
+
+</div>
 {% endblock %}

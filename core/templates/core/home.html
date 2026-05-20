@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Task Manager | Organize your work{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <h1>Manage your tasks and workspace efficiently</h1>
+        <p>
+            A simple and structured task management platform for teams and individuals.
+            Create workspaces, manage members, assign roles, and keep your work organized.
+        </p>
+
+        <div class="hero-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'workspace_list' %}" class="btn btn-primary">Go to Dashboard</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+                <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2>Core Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Create Workspaces</h3>
+                <p>Create separate workspaces for different teams, projects, or clients.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Manage Team Members</h3>
+                <p>Invite people, assign roles, and control access inside each workspace.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Track Tasks Clearly</h3>
+                <p>Keep all tasks structured and visible so nothing gets lost.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Permission-Based Access</h3>
+                <p>Owners, admins, and members have different levels of control.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="container">
+        <h2>How it works</h2>
+        <div class="steps">
+            <div class="step">
+                <h3>1. Create an account</h3>
+                <p>Sign up and access your personal dashboard.</p>
+            </div>
+            <div class="step">
+                <h3>2. Build your workspace</h3>
+                <p>Create a workspace and organize your project environment.</p>
+            </div>
+            <div class="step">
+                <h3>3. Add members and manage tasks</h3>
+                <p>Invite your team, assign roles, and start tracking work efficiently.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="benefits">
+    <div class="container">
+        <h2>Why use this platform?</h2>
+        <ul>
+            <li>Simple and focused interface</li>
+            <li>Role-based collaboration</li>
+            <li>Better organization for team workflows</li>
+            <li>Clean structure for managing workspaces and tasks</li>
+            <li>Designed for real project coordination</li>
+        </ul>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <h2>Start organizing your work today</h2>
+        <p>Build your workspace, invite your team, and manage tasks in one place.</p>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'workspace_list' %}" class="btn btn-primary">Open Dashboard</a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-primary">Create Free Account</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
