@@ -43,12 +43,7 @@ class WorkspaceDetailView(LoginRequiredMixin, DetailView):
 
 
     def get_queryset(self):
-        return Workspace.objects.prefetch_related(
-            'projects',
-            Prefetch(
-                'memberships', queryset=WorkspaceMember.objects.filter(is_active=True),
-            )
-        )
+        return Workspace.objects.prefetch_related('projects', 'memberships')
 
 
 

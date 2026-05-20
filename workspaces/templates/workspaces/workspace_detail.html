@@ -34,23 +34,27 @@
         <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>{{ total_members }}</h3>
+                <h3>{{ workspace.memberships.count }}</h3>
                 <p>Total Members</p>
             </div>
 
             <div class="stat-card">
-                <h3>{{ total_tasks }}</h3>
-                <p>Total Tasks</p>
+                <h3>{{ workspace.projects.count }}</h3>
+                <p>Total Projects</p>
             </div>
 
             <div class="stat-card">
-                <h3>{{ pending_invitations }}</h3>
+                <h3>{{ workspace.invitations.count }}</h3>
                 <p>Pending Invitations</p>
             </div>
 
             <div class="stat-card">
-                <h3>{{ user_role|title }}</h3>
+                {% for membership in workspace.memberships.all %}
+                    {% if membership.members == request.user %}
+                <h3>{{ membership.role|title }}</h3>
                 <p>Your Role</p>
+                {% endif %}
+                {% endfor %}
             </div>
         </div>
 
@@ -63,13 +67,13 @@
                     <a href="{% url 'add-member' workspace.pk %}" class="btn btn-sm btn-outline">Add Member</a>
                 </div>
 
-                {% if memberships %}
+                {% if workspace.memberships.all %}
                     <div class="member-list">
-                        {% for membership in memberships %}
+                        {% for membership in workspace.memberships.all %}
                             <div class="member-item">
                                 <div class="member-info">
-                                    <h4>{{ membership.member.username }}</h4>
-                                    <p>{{ membership.member.email }}</p>
+                                    <h4>{{ membership.members.username }}</h4>
+                                    <p>{{ membership.members.email }}</p>
                                 </div>
 
                                 <span class="role-badge role-{{ membership.role }}">
@@ -83,22 +87,24 @@
                 {% endif %}
             </div>
 
+            
+
             <!-- Tasks Section -->
             <div class="content-card">
                 <div class="section-header">
-                    <h2>Tasks</h2>
-                    <a href="{% url 'task-create' workspace.pk %}" class="btn btn-sm btn-primary">+ New Task</a>
+                    <h2>Projects</h2>
+                    <a href="{% url 'project-create' workspace.pk %}" class="btn btn-sm btn-primary">+ New Project</a>
                 </div>
-
-                {% if tasks %}
+                
+                {% if workspace.projects.all %}
                     <div class="task-list">
-                        {% for task in tasks %}
+                        {% for project in workspace.projects.all %}
                             <div class="task-item">
                                 <div class="task-info">
-                                    <h4>{{ task.title }}</h4>
+                                    <h4>{{ project.name }}</h4>
                                     <p>
-                                        {% if task.description %}
-                                            {{ task.description|truncatechars:80 }}
+                                        {% if project.descriptions %}
+                                            {{ project.descriptions|truncatechars:80 }}
                                         {% else %}
                                             No description available.
                                         {% endif %}
@@ -106,11 +112,8 @@
                                 </div>
 
                                 <div class="task-meta">
-                                    <span class="status-badge status-{{ task.status }}">
-                                        {{ task.status|title }}
-                                    </span>
 
-                                    <a href="{% url 'task_detail' task.pk %}" class="task-link">
+                                    <a href="{% url 'project-detail' project.pk %}" class="task-link">
                                         View
                                     </a>
                                 </div>

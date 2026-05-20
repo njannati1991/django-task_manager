@@ -1,124 +1,240 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %} Create Project {% endblock %}
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'projects/css/project_detail.css' %}">
+{% endblock %}
 
 {% block content %}
+<section class="project-detail-page">
+<div class="project-container">
 
-<h2>{{ project.name }}</h2>
+<!-- HERO -->
 
-<p class="text-muted">
-    Workspace: {{ project.workspace.name }}
-</p>
+<div class="project-hero">
+
+<div class="hero-content">
+<h1>{{ project.name }}</h1>
 
 <p>
-    {{ project.descriptions }}
+{% if project.description %}
+{{ project.description }}
+{% else %}
+No description provided for this project.
+{% endif %}
 </p>
 
-<hr>
+<p class="project-meta">
+Workspace: <strong>{{ project.workspace.name }}</strong>
+</p>
 
-<h4>Tasks</h4>
+</div>
 
-<a href="{% url 'task-create' project.id %}" class="btn btn-primary btn-sm mb-3">
-    Create Task
+<div class="hero-actions">
+
+<a href="{% url 'workspace-detail' project.workspace.pk %}" class="btn btn-outline">
+Back to Workspace
 </a>
 
+<a href="{% url 'project-update' project.workspace.pk project.pk %}" class="btn btn-warning">
+Edit Project
+</a>
 
-<form method="get">
+</div>
 
-<input
-    type="text"
-    name="search"
-    placeholder="Search..."
-    value="{{ search_query }}"
->
-
-<select name="status">
-
-<option value="">All Status</option>
-<option value="todo">Todo</option>
-<option value="in_progress">In Progress</option>
-<option value="done">Done</option>
-
-</select>
-
-<select name="priority">
-
-<option value="">All Priority</option>
-<option value="low">Low</option>
-<option value="medium">Medium</option>
-<option value="high">High</option>
-
-</select>
-
-<button type="submit">
-Filter
-</button>
-
-</form>
+</div>
 
 
+<!-- STATS -->
 
-<ul class="list-group">
+<div class="stats-grid">
 
-{% for task in page_obj %}
+<div class="stat-card">
+<h3>{{ project.tasks.count }}</h3>
+<p>Total Tasks</p>
+</div>
 
-<li class="list-group-item">
+<div class="stat-card">
+<h3>{{ todo_count }}</h3>
+<p>Todo</p>
+</div>
 
-<strong><a href="{% url 'task-detail' task.project.pk task.pk %}">{{ task.title }}</a></strong>
+<div class="stat-card">
+<h3>{{ progress_count }}</h3>
+<p>In Progress</p>
+</div>
 
-<span class="badge bg-secondary">
+<div class="stat-card">
+<h3>{{ done_count }}</h3>
+<p>Done</p>
+</div>
+
+</div>
+
+
+<div class="detail-grid">
+
+
+<!-- TASKS -->
+
+<div class="detail-section">
+
+<div class="section-header">
+<h2>Project Tasks</h2>
+
+<a href="{% url 'task-create' project.id %}" class="btn btn-primary">
++ New Task 
+</a>
+
+</div>
+
+
+{% if project.tasks.all %}
+
+<div class="task-list">
+
+{% for task in project.tasks.all %}
+
+<div class="task-card">
+
+<div class="task-main">
+
+<h3>{{ task.title }}</h3>
+
+<p>
+{% if task.description %}
+{{ task.description|truncatechars:120 }}
+{% else %}
+No description
+{% endif %}
+</p>
+
+</div>
+
+
+<div class="task-meta">
+
+<span class="status-badge status-{{ task.status|lower }}">
 {{ task.status }}
 </span>
 
-</li>
-<a href="{% url 'task-update' task.id %}" class="btn btn-sm btn-warning">
-Edit
+{% if task.priority %}
+<span class="priority-badge priority-{{ task.priority|lower }}">
+{{ task.priority }}
+</span>
+{% endif %}
+
+{% if task.assigned_to %}
+<span class="task-assignee">
+Assigned: {{ task.assigned_to.username }}
+</span>
+{% endif %}
+
+</div>
+
+
+<div class="task-actions">
+
+<a href="{% url 'task-detail' project.pk task.pk %}" class="btn btn-outline btn-sm">
+View 
 </a>
 
-<form method="post" action="{% url 'task-delete' task.id %}">
-    {% csrf_token %}
-    <button class="btn btn-danger btn-sm">
-        Delete
-    </button>
-</form>
+</div>
 
-
-
-{% empty %}
-
-<li class="list-group-item">
-No tasks yet
-</li>
+</div>
 
 {% endfor %}
 
-</ul>
-<div class="pagination">
+</div>
 
+{% else %}
 
-
-
-
-{% if page_obj.has_previous %}
-
-<a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}">
-Previous
-</a>
+<div class="empty-state small-empty">
+<h3>No Tasks Yet</h3>
+<p>This project has no tasks yet.</p>
+</div>
 
 {% endif %}
 
-<span>
-Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-</span>
+</div>
 
-{% if page_obj.has_next %}
 
-<a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}">
-Next
-</a>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar-section">
+
+<!-- ASSIGNED MEMBERS -->
+
+<div class="detail-section">
+
+<div class="section-header">
+<h2>Assigned Members</h2>
+</div>
+
+{% if project.tasks %}
+
+<div class="member-list">
+
+
+<div class="member-card">
+    {% for member in members %}
+<div>
+<strong>{{ member.assigned_to.username }}</strong>
+<p>{{ task.assigned_to.email }}</p>
+</div>
+{% endfor %}
+
+</div>
+
+
+</div>
+
+{% else %}
+
+<p class="muted-text">
+No members assigned to this project.
+</p>
 
 {% endif %}
 
+</div>
 
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="detail-section">
+
+<div class="section-header">
+<h2>Quick Actions</h2>
+</div>
+
+<div class="quick-actions">
+
+<a href="{% url 'task-create' project.pk %}" class="quick-action-link">
+Create Task
+</a>
+
+<a href="{% url 'project-update' project.workspace.pk project.pk %}" class="quick-action-link">
+Update Project
+</a>
+
+<a href="{% url 'workspace-detail' project.workspace.pk %}" class="quick-action-link">
+Back to Workspace
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</section>
 
 {% endblock %}

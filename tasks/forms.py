@@ -17,4 +17,4 @@ class TaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if project:
-            self.fields['assigned_to'].queryset = User.objects.filter(workspaces__workspace = project.workspace)
+            self.fields['assigned_to'].queryset = User.objects.filter(memberships__workspace = project.workspace)

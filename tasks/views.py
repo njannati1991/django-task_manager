@@ -19,8 +19,10 @@ class TaskCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView):
     form_class = TaskForm
 
     def dispatch(self, request, *args, **kwargs):
-        
-        self.project = Project.objects.filter(id=self.kwargs['project_id'], workspace__owner=request.user).first()
+        try:
+            self.project = Project.objects.get(id=self.kwargs['project_id'], workspace__owner = request.user)
+        except Project.DoesNotExist:
+            return Http404
 
         if not self.project:
             raise Http404('Project not found.')

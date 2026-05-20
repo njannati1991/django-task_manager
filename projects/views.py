@@ -117,6 +117,10 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['page_obj'] = page_obj
+        context['todo_count'] = tasks.filter(status='todo').count()
+        context['progress_count'] = tasks.filter(status='in_progress').count()
+        context['done_count'] = tasks.filter(status='done').count()
+        
         
         
         return context
