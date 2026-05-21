@@ -27,7 +27,7 @@ Installation
 Clone the repository:
 
 
-git clone https://github.com/your-username/django-task-manager.git
+git clone https://github.com/njannati1991/django-task_manager.git
 Move into the project directory:
 
 
