@@ -1,21 +1,174 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %} Create Task {% endblock %}
+{% block title %}Create Task{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/task_form.css' %}">
+{% endblock %}
 
 {% block content %}
+<section class="task-form-page">
+<div class="task-form-container">
 
-<h2>Create Task</h2>
+<!-- HERO -->
 
-<form method="post" class="card card-body shadow-sm">
+<div class="task-form-hero">
+
+<div class="hero-content">
+<h1>Create New Task</h1>
+
+<p>
+Add a new task to the project and assign it to a team member.
+</p>
+
+<p class="task-meta">
+Project: <strong>{{ project.name }}</strong>
+</p>
+
+</div>
+
+<div class="hero-actions">
+
+<a href="" class="btn btn-outline">
+Back to Project
+</a>
+
+</div>
+
+</div>
+
+
+<!-- FORM SECTION -->
+
+<div class="form-grid">
+
+<div class="form-section">
+
+<div class="section-header">
+<h2>Task Information</h2>
+</div>
+
+<form method="post" class="django-form">
 
 {% csrf_token %}
 
-{{ form.as_p }}
+{% if form.non_field_errors %}
+<div class="form-errors">
+{% for error in form.non_field_errors %}
+<p class="error-message">{{ error }}</p>
+{% endfor %}
+</div>
+{% endif %}
 
-<button class="btn btn-success">
+
+<!-- Title -->
+
+<div class="form-group">
+<label for="{{ form.title.id_for_label }}">Task Title</label>
+{{ form.title }}
+{% if form.title.errors %}
+<span class="field-error">{{ form.title.errors.0 }}</span>
+{% endif %}
+</div>
+
+
+<!-- Description -->
+
+<div class="form-group">
+<label for="{{ form.description.id_for_label }}">Description</label>
+{{ form.description }}
+{% if form.description.errors %}
+<span class="field-error">{{ form.description.errors.0 }}</span>
+{% endif %}
+</div>
+
+
+<!-- Status + Priority -->
+
+<div class="form-row">
+
+<div class="form-group">
+<label for="{{ form.status.id_for_label }}">Status</label>
+{{ form.status }}
+{% if form.status.errors %}
+<span class="field-error">{{ form.status.errors.0 }}</span>
+{% endif %}
+</div>
+
+<div class="form-group">
+<label for="{{ form.priority.id_for_label }}">Priority</label>
+{{ form.priority }}
+{% if form.priority.errors %}
+<span class="field-error">{{ form.priority.errors.0 }}</span>
+{% endif %}
+</div>
+
+</div>
+
+
+<!-- Assignee + Due date -->
+
+<div class="form-row">
+
+<div class="form-group">
+<label for="{{ form.assigned_to.id_for_label }}">Assignee</label>
+{{ form.assigned_to }}
+{% if form.assigned_to.errors %}
+<span class="field-error">{{ form.assigned_to.errors.0 }}</span>
+{% endif %}
+</div>
+
+<div class="form-group">
+<label for="{{ form.due_date.id_for_label }}">Due Date</label>
+{{ form.due_date }}
+{% if form.due_date.errors %}
+<span class="field-error">{{ form.due_date.errors.0 }}</span>
+{% endif %}
+</div>
+
+</div>
+
+
+<div class="form-actions-bar">
+
+<button type="submit" class="btn btn-primary">
 Create Task
 </button>
 
+<a href="" class="btn btn-outline">
+Cancel {{task.project.pk}}
+</a>
+
+</div>
+
 </form>
+
+</div>
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar-section">
+
+<div class="info-card">
+
+<h3>Task Creation Tips</h3>
+
+<ul>
+<li>Give the task a clear and short title.</li>
+<li>Assign it to the responsible member.</li>
+<li>Set priority correctly to help planning.</li>
+<li>Add a due date if the task has a deadline.</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</section>
 
 {% endblock %}

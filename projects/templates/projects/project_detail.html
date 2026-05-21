@@ -174,16 +174,16 @@ View
 <h2>Assigned Members</h2>
 </div>
 
-{% if project.tasks %}
+{% if assignees %}
 
 <div class="member-list">
 
 
 <div class="member-card">
-    {% for member in members %}
+    {% for assigne in assignees %}
 <div>
-<strong>{{ member.assigned_to.username }}</strong>
-<p>{{ task.assigned_to.email }}</p>
+<strong>{{ assigne.username }}</strong>
+<p>{{ assigne.email }}</p>
 </div>
 {% endfor %}
 

@@ -1,18 +1,139 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
+{% block title %}Update Member{% endblock %}
 
-{% block title %}
-    Update Member
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/task_form.css' %}">
 {% endblock %}
 
 {% block content %}
-<h2>Update Member</h2>
+<section class="task-form-page">
+<div class="task-form-container">
 
-<form action="" method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Update</button>
-</form>
+    <!-- HERO -->
+    <div class="task-form-hero">
 
+        <div class="hero-content">
+            <h1>Update Member</h1>
+            <p>
+                Modify the role or permissions of this member in
+                <strong>{{ workspace.name }}</strong>.
+            </p>
+
+            <p class="task-meta">
+                Member: <strong>{{ member.user.username }}</strong>
+            </p>
+        </div>
+
+        <div class="hero-actions">
+            <a href="" class="btn btn-outline">
+                Back to Workspace
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- FORM -->
+
+    <div class="form-grid">
+
+        <div class="form-section">
+
+            <div class="section-header">
+                <h2>Member Settings</h2>
+            </div>
+
+            <form method="post" class="django-form">
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- User Display -->
+
+                <div class="form-group">
+                    <label>User</label>
+                    <input type="text" value="{{ member.user.email }}" disabled>
+                </div>
+
+                <!-- Role -->
+
+                <div class="form-group">
+                    <label for="{{ form.role.id_for_label }}">Role</label>
+                    {{ form.role }}
+
+                    {% if form.role.errors %}
+                    <span class="field-error">
+                        {{ form.role.errors.0 }}
+                    </span>
+                    {% endif %}
+                </div>
+
+
+                <div class="form-actions-bar">
+
+                    <button type="submit" class="btn btn-primary">
+                        Save Changes
+                    </button>
+
+                    <a href="" class="btn btn-outline">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- SIDEBAR -->
+
+        <div class="sidebar-section">
+
+            <div class="info-card">
+
+                <h3>Role Permissions</h3>
+
+                <ul>
+                    <li><strong>Admin:</strong> Manage members and projects.</li>
+                    <li><strong>Member:</strong> Create and update tasks.</li>
+                    <li><strong>Viewer:</strong> Can only view projects.</li>
+                </ul>
+
+            </div>
+
+
+            <!-- Remove Member -->
+
+            <div class="info-card">
+
+                <h3>Danger Zone</h3>
+
+                <p style="margin-bottom:15px;">
+                    Removing this member will revoke their access to this workspace.
+                </p>
+
+                <a href=""
+                   class="btn btn-warning">
+                   Remove Member
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</section>
 
 {% endblock %}

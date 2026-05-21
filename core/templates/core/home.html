@@ -14,7 +14,7 @@
 
         <div class="hero-actions">
             {% if user.is_authenticated %}
-                <a href="{% url 'workspace_list' %}" class="btn btn-primary">Go to Dashboard</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
             {% else %}
                 <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
                 <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
@@ -89,7 +89,7 @@
         <p>Build your workspace, invite your team, and manage tasks in one place.</p>
 
         {% if user.is_authenticated %}
-            <a href="{% url 'workspace_list' %}" class="btn btn-primary">Open Dashboard</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary">Open Dashboard</a>
         {% else %}
             <a href="{% url 'register' %}" class="btn btn-primary">Create Free Account</a>
         {% endif %}

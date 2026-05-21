@@ -1,0 +1,290 @@
+/* ============================= */
+/* Page Layout */
+/* ============================= */
+
+.task-form-page {
+    background: #f5f7fb;
+    padding: 50px 0 70px;
+    min-height: 100vh;
+}
+
+.task-form-container {
+    width: 92%;
+    max-width: 1150px;
+    margin: 0 auto;
+}
+
+
+/* ============================= */
+/* Hero Section */
+/* ============================= */
+
+.task-form-hero {
+    background: linear-gradient(135deg, #111827, #1f2937);
+    color: #fff;
+    padding: 32px;
+    border-radius: 18px;
+    margin-bottom: 28px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.hero-content h1 {
+    margin: 0 0 10px;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.hero-content p {
+    margin: 0;
+    line-height: 1.7;
+    opacity: 0.9;
+    max-width: 650px;
+}
+
+.task-meta {
+    margin-top: 10px;
+    opacity: 0.85;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+/* ============================= */
+/* Form Grid */
+/* ============================= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    gap: 24px;
+}
+
+.form-section {
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.section-header {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e5eaf2;
+    padding-bottom: 15px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #111827;
+}
+
+
+/* ============================= */
+/* Django Form Styling */
+/* ============================= */
+
+.django-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+}
+
+/* Inputs, Selects, Textarea styling */
+.django-form input[type="text"],
+.django-form input[type="date"],
+.django-form select,
+.django-form textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #1f2937;
+    background-color: #f9fafb;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.django-form input:focus,
+.django-form select:focus,
+.django-form textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.django-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+
+/* ============================= */
+/* Buttons & Actions */
+/* ============================= */
+
+.btn {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+    font-size: 15px;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-outline {
+    background: #fff;
+    border: 1px solid #d1d9e6;
+    color: #1f2937;
+}
+
+.btn-outline:hover {
+    background: #f3f6fb;
+}
+
+.btn-warning {
+    background: #f59e0b;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background: #d97706;
+}
+
+.form-actions-bar {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    border-top: 1px solid #e5eaf2;
+    padding-top: 20px;
+}
+
+
+/* ============================= */
+/* Errors */
+/* ============================= */
+
+.form-errors {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: 10px;
+    padding: 12px 16px;
+}
+
+.error-message {
+    color: #b91c1c;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.field-error {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+
+/* ============================= */
+/* Sidebar Info Card */
+/* ============================= */
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-card {
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.info-card h3 {
+    margin: 0 0 15px;
+    font-size: 18px;
+    color: #111827;
+}
+
+.info-card ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.info-card li {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+
+/* ============================= */
+/* Responsive */
+/* ============================= */
+
+@media (max-width: 1000px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .task-form-hero {
+        padding: 24px;
+    }
+
+    .hero-content h1 {
+        font-size: 24px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}

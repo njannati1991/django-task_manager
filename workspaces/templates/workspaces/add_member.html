@@ -1,23 +1,85 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-<h2>Add Member</h2>
+{% block title %}Add Member to {{ workspace.name }}{% endblock %}
 
-
-{% block title %}
-    Add Member
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/task_form.css' %}">
 {% endblock %}
 
-
 {% block content %}
-<h3>Workspace: {{workspace.name}}</h3>
+<section class="task-form-page">
+<div class="task-form-container">
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <!-- HERO -->
+    <div class="task-form-hero">
+        <div class="hero-content">
+            <h1>Add Member to Workspace</h1>
+            <p>Select a user from the system to grant them access to <strong>{{ workspace.name }}</strong>.</p>
+        </div>
+        <div class="hero-actions">
+            <a href="{% url 'workspace-detail' workspace.pk %}" class="btn btn-outline">
+                Back to Workspace
+            </a>
+        </div>
+    </div>
 
-    <button type="submit">
-        Add Member
-    </button>
-</form>
+    <!-- FORM SECTION -->
+    <div class="form-grid">
+        <div class="form-section">
+            <div class="section-header">
+                <h2>Member Details</h2>
+            </div>
 
+            <form method="post" class="django-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- User Selection -->
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Select User</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <span class="field-error">{{ form.user.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label for="{{ form.role.id_for_label }}">Assign Role</label>
+                    {{ form.role }}
+                    {% if form.role.errors %}
+                        <span class="field-error">{{ form.role.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions-bar">
+                    <button type="submit" class="btn btn-primary">Add Member</button>
+                    <a href="{% url 'workspace-detail' workspace.pk %}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar-section">
+            <div class="info-card">
+                <h3>Workspace Roles</h3>
+                <ul>
+                    <li><strong>Admin:</strong> Can manage projects and members.</li>
+                    <li><strong>Member:</strong> Can view and update tasks.</li>
+                    <li><strong>Viewer:</strong> Read-only access to projects.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+</section>
 {% endblock %}

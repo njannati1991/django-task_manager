@@ -1,8 +1,9 @@
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from django.http import Http404
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth import get_user_model
 
 from django.db.models import Prefetch, Q
 from django.core.paginator import Paginator
@@ -14,7 +15,7 @@ from .models import Project
 from workspaces.permissions import WorkspacePermissionMixin
 
 
-
+User = get_user_model()
 
 class ProjectCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView):
     model = Project
@@ -87,8 +88,9 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        project = self.object
 
-        tasks = self.object.tasks.filter(is_active= True)
+        tasks = project.tasks.filter(is_active= True)
 
         search_query = self.request.GET.get('search')
 
@@ -120,6 +122,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         context['todo_count'] = tasks.filter(status='todo').count()
         context['progress_count'] = tasks.filter(status='in_progress').count()
         context['done_count'] = tasks.filter(status='done').count()
+        context['assignees'] = User.objects.filter(tasks__project = project).distinct()
         
         
         

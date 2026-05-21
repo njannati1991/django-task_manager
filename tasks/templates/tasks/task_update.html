@@ -1,21 +1,124 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Update Task {% endblock %}
+{% block title %}Edit Task: {{ task.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/task_form.css' %}">
+{% endblock %}
 
 {% block content %}
+<section class="task-form-page">
+<div class="task-form-container">
 
-<h2>Update Task</h2>
+    <!-- HERO -->
+    <div class="task-form-hero">
+        <div class="hero-content">
+            <h1>Edit Task: {{ task.title }}</h1>
+            <p>Modify the details, priority, status, and assignee for this task. All changes are real-time once saved.</p>
+            <p class="task-meta">Project: <strong>{{ task.project.name }}</strong></p>
+        </div>
+        <div class="hero-actions">
+            <a href="{% url 'task-detail' task.project.pk task.pk %}" class="btn btn-outline">
+                Cancel & Go Back
+            </a>
+        </div>
+    </div>
 
-<form method="post" class="card card-body shadow-sm">
+    <!-- FORM SECTION -->
+    <div class="form-grid">
+        <div class="form-section">
+            <div class="section-header">
+                <h2>Task Information</h2>
+            </div>
 
-{% csrf_token %}
+            <form method="post" class="django-form">
+                {% csrf_token %}
 
-{{ form.as_p }}
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
 
-<button class="btn btn-primary">
-Update Task
-</button>
+                <!-- Title Field -->
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}">Task Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <span class="field-error">{{ form.title.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-</form>
+                <!-- Description Field -->
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <span class="field-error">{{ form.description.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
+                <!-- Row for Status & Priority -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.status.id_for_label }}">Status</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <span class="field-error">{{ form.status.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.priority.id_for_label }}">Priority</label>
+                        {{ form.priority }}
+                        {% if form.priority.errors %}
+                            <span class="field-error">{{ form.priority.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Row for Assignee & Due Date -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.assigned_to.id_for_label }}">Assignee</label>
+                        {{ form.assigned_to }}
+                        {% if form.assigned_to.errors %}
+                            <span class="field-error">{{ form.assigned_to.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.due_date.id_for_label }}">Due Date</label>
+                        {{ form.due_date }}
+                        {% if form.due_date.errors %}
+                            <span class="field-error">{{ form.due_date.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions-bar">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="{% url 'task-detail' task.project.pk task.pk %}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- SIDEBAR INFO -->
+        <div class="sidebar-section">
+            <div class="info-card">
+                <h3>Editing Tips</h3>
+                <ul>
+                    <li>Make sure to set realistic <strong>Due Dates</strong>.</li>
+                    <li>Update the <strong>Status</strong> to keep the team aligned.</li>
+                    <li>Only assign members who belong to this workspace.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+</section>
 {% endblock %}

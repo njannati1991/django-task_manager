@@ -1,24 +1,152 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}
-Update Workspace
+{% block title %}Update Workspace{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/task_form.css' %}">
 {% endblock %}
 
-
 {% block content %}
-<h1>Update Workspace</h1>
-
-<form method="post">
-
-{% csrf_token %}
-
-{{ form.as_p }}
-
-<button type="submit">
-Update
-</button>
-
-</form>
+<section class="task-form-page">
+<div class="task-form-container">
 
 
+    <!-- HERO -->
+    <div class="task-form-hero">
+
+        <div class="hero-content">
+            <h1>Update Workspace</h1>
+            <p>Edit general information and branding for your workspace.</p>
+
+            <p class="task-meta">
+                Current workspace: <strong>{{ workspace.name }}</strong>
+            </p>
+        </div>
+
+        <div class="hero-actions">
+            <a href="{% url 'workspace-detail' workspace.pk %}" class="btn btn-outline">
+                Back to Workspace
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <!-- FORM GRID -->
+    <div class="form-grid">
+
+
+        <!-- MAIN FORM -->
+        <div class="form-section">
+
+            <div class="section-header">
+                <h2>Workspace Information</h2>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="django-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+
+                <!-- Name -->
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Workspace Name</label>
+                    {{ form.name }}
+
+                    {% if form.name.errors %}
+                    <span class="field-error">{{ form.name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+
+                    {% if form.description.errors %}
+                    <span class="field-error">{{ form.description.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+
+                <!-- Logo -->
+                {% if form.logo %}
+                <div class="form-group">
+                    <label for="{{ form.logo.id_for_label }}">Workspace Logo</label>
+                    {{ form.logo }}
+
+                    {% if form.logo.errors %}
+                    <span class="field-error">{{ form.logo.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                {% if workspace.logo %}
+                <div class="form-group">
+                    <label>Current Logo</label>
+                    <img src="{{ workspace.logo.url }}" alt="Logo" style="width:120px; border-radius:6px;">
+                </div>
+                {% endif %}
+                {% endif %}
+
+
+                <!-- ACTION BUTTONS -->
+                <div class="form-actions-bar">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+
+                    <a href="{% url 'workspace-detail' workspace.pk %}" class="btn btn-outline">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+
+        <!-- SIDEBAR -->
+        <div class="sidebar-section">
+
+            <div class="info-card">
+                <h3>Workspace Details</h3>
+
+                <p><strong>Created:</strong> {{ workspace.created_at|date:"M d, Y" }}</p>
+                <p><strong>Total Members:</strong> {{ workspace.members.count }}</p>
+
+                <p style="margin-top:12px; line-height:1.6;">
+                    Edit your workspace information and keep it clean and recognizable for all members.
+                </p>
+            </div>
+
+
+            <div class="info-card">
+                <h3>Danger Zone</h3>
+
+                <p style="margin-bottom:15px;">
+                    Deleting a workspace will permanently remove all projects, tasks, and members inside it.
+                </p>
+
+                <a href="{% url 'workspace-delete' workspace.pk %}" class="btn btn-warning" style="background:#dc3545; color:white;">
+                    Delete Workspace
+                </a>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+</section>
 {% endblock %}

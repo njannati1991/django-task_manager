@@ -79,6 +79,12 @@
                                 <span class="role-badge role-{{ membership.role }}">
                                     {{ membership.role|title }}
                                 </span>
+
+                                <div class="section-header">
+                    
+                                    <a href="{% url 'update-member' workspace.pk membership.members.username %}" class="btn btn-sm btn-outline">Edit Member</a>
+                                </div>
+
                             </div>
                         {% endfor %}
                     </div>

@@ -1,17 +1,90 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Create Project{% endblock %}
 
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2 class="mb-4">Create Project</h2>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/task_form.css' %}">
+{% endblock %}
 
-        <form method="post" class="card card-body shadow-sm">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-success">Create</button>
-        </form>
+{% block content %}
+<section class="task-form-page">
+<div class="task-form-container">
+
+    <!-- HERO -->
+    <div class="task-form-hero">
+        <div class="hero-content">
+            <h1>Create Project</h1>
+            <p>Create a new project inside workspace <strong>{{ workspace.name }}</strong>.</p>
+        </div>
+
+        <div class="hero-actions">
+            <a href="" class="btn btn-outline">
+                Back to Workspace
+            </a>
+        </div>
     </div>
+
+
+    <!-- FORM GRID -->
+    <div class="form-grid">
+
+        <!-- MAIN FORM -->
+        <div class="form-section">
+
+            <div class="section-header"><h2>Project Information</h2></div>
+
+            <form method="post" class="django-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Name -->
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Project Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <span class="field-error">{{ form.name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                    <span class="field-error">{{ form.description.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="form-actions-bar">
+                    <button type="submit" class="btn btn-primary">Create Project</button>
+                    <a href="" class="btn btn-outline">Cancel</a>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar-section">
+
+            <div class="info-card">
+                <h3>Project Tips</h3>
+                <p>Name your project clearly so your team members recognize it easily.</p>
+                <p>Keep the description short but informative.</p>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+</section>
 {% endblock %}
