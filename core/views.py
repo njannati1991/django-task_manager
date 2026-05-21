@@ -16,6 +16,10 @@ class HomeView(TemplateView):
     template_name = 'core/home.html'
 
 
+class AdminDashboard(TemplateView):
+    template_name = 'core/admin_dashboard.html'
+
+
 class UserDashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'core/user_dashboard.html'
 

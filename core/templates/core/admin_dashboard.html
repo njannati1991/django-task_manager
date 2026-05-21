@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="admin-sidebar">
+
+        <div class="sidebar-logo">
+            <h2>TaskFlow</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="#" class="btn btn-warning">Dashboard</a>
+            <a href="#" class="btn btn-danger">Workspaces</a>
+            <a href="#" class="btn btn-danger">Projects</a>
+            <a href="#" class="btn btn-danger">Tasks</a>
+            <a href="#" class="btn btn-danger">Users</a>
+            <a href="#" class="btn btn-danger">Reports</a>
+            <a href="#" class="btn btn-danger">Settings</a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- MAIN -->
+
+    <main class="admin-main">
+
+
+        <!-- TOPBAR -->
+
+        <div class="admin-topbar">
+
+            <div class="topbar-title">
+                <h1>System Overview</h1>
+            </div>
+
+            <div class="topbar-actions">
+                <span class="admin-user">
+                    Logged in as {{ request.user.username }}
+                </span>
+            </div>
+
+        </div>
+
+
+
+        <!-- SYSTEM STATS -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p>{{ total_users }}</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Workspaces</h3>
+                <p>{{ total_workspaces }}</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Projects</h3>
+                <p>{{ total_projects }}</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Open Tasks</h3>
+                <p>{{ open_tasks }}</p>
+            </div>
+
+        </section>
+
+
+
+        <!-- MAIN DASHBOARD GRID -->
+
+        <section class="dashboard-grid">
+
+
+            <!-- ACTIVE WORKSPACES -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+                    <h3>Active Workspaces</h3>
+                </div>
+
+                <ul class="card-list">
+
+                    {% for workspace in active_workspaces %}
+
+                    <li>
+                        <strong>{{ workspace.name }}</strong>
+                        <span>{{ workspace.members.count }} members</span>
+                    </li>
+
+                    {% empty %}
+
+                    <li>No workspaces available</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- RECENT USERS -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+                    <h3>Latest Users</h3>
+                </div>
+
+                <ul class="card-list">
+
+                    {% for user in recent_users %}
+
+                    <li>
+                        <strong>{{ user.username }}</strong>
+                        <span>{{ user.date_joined|date:"M d" }}</span>
+                    </li>
+
+                    {% empty %}
+
+                    <li>No users found</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- RECENT TASKS -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+                    <h3>Recent Tasks</h3>
+                </div>
+
+                <ul class="card-list">
+
+                    {% for task in recent_tasks %}
+
+                    <li>
+                        <strong>{{ task.title }}</strong>
+                        <span>{{ task.project.name }}</span>
+                    </li>
+
+                    {% empty %}
+
+                    <li>No tasks found</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+                    <h3>Quick Actions</h3>
+                </div>
+
+                <div class="quick-actions">
+
+                    <a href="{% url 'workspace-create' %}" class="action-btn">
+                        New Workspace
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- SYSTEM INFO -->
+
+            <div class="dashboard-card">
+
+                <div class="card-header">
+                    <h3>System Info</h3>
+                </div>
+
+                <ul class="card-list">
+                    <li>
+                        <strong>Server Time</strong>
+                        <span>{{ now|date:"H:i" }}</span>
+                    </li>
+
+                    <li>
+                        <strong>Total Tasks</strong>
+                        <span>{{ total_tasks }}</span>
+                    </li>
+
+                    <li>
+                        <strong>Completed Tasks</strong>
+                        <span>{{ completed_tasks }}</span>
+                    </li>
+                </ul>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}
