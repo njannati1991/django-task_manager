@@ -41,7 +41,7 @@ class AddMemberForm(forms.Form):
 
         if WorkspaceMember.objects.filter(
             workspace = self.workspace,
-            members = user,
+            member = user,
 
         ).exists():
             raise forms.ValidationError('This user is already a member of this workspace.')
@@ -58,5 +58,5 @@ class UpdateMemberForm(forms.ModelForm):
 
     class Meta:
         model = WorkspaceMember
-        fields = ('members', 'role')
+        fields = ('member', 'role')
 

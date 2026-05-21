@@ -9,7 +9,7 @@ class Project(BaseModel):
 
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='projects')
     name = models.CharField(max_length=255)
-    descriptions = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     slug = models.SlugField()
 
     def save(self, *args, **kwargs):
@@ -22,7 +22,7 @@ class Project(BaseModel):
     
     @classmethod
     def user_total_projects(cls, user):
-        return Project.objects.filter(workspace__memberships__members = user).count()
+        return Project.objects.filter(workspace__memberships__member = user).count()
     
 
 

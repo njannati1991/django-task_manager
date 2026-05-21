@@ -22,12 +22,12 @@ class WorkspaceListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
 
-        user_memberships = WorkspaceMember.objects.filter(members=user).select_related('workspace')
+        user_memberships = WorkspaceMember.objects.filter(member=user).select_related('workspace')
 
         return (
             Workspace.objects.filter(
                 Q(owner=user) |
-                Q(memberships__members=user)
+                Q(memberships__member=user)
             )
             .prefetch_related(
                 Prefetch('memberships', queryset=user_memberships, to_attr='user_membership')
@@ -61,7 +61,7 @@ class WorkspaceCreateView(LoginRequiredMixin, CreateView):
             self.object = form.save()
 
             WorkspaceMember.objects.create(
-                members = self.object.owner,
+                member = self.object.owner,
                 workspace = self.object,
                 role = 'owner',
             )

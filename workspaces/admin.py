@@ -6,8 +6,8 @@ from .models import Workspace, WorkspaceMember
 
 @admin.register(WorkspaceMember)
 class WorkspaceMemberShipAdmin(admin.ModelAdmin):
-    list_display = ['id', 'members', 'workspace', 'role', 'is_active']
-    list_display_links = ('id', 'members')
+    list_display = ['id', 'member', 'workspace', 'role', 'is_active']
+    list_display_links = ('id', 'member')
 
     
 

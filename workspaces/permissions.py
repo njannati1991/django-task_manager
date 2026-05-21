@@ -19,7 +19,7 @@ class WorkspacePermissionMixin:
 
         try:
             membership = WorkspaceMember.objects.get(
-                members=request.user,
+                member=request.user,
                 workspace=self.workspace
             )
         except WorkspaceMember.DoesNotExist:

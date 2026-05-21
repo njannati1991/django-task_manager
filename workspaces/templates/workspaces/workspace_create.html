@@ -16,17 +16,13 @@
     <div class="task-form-hero">
 
         <div class="hero-content">
-            <h1>Update Workspace</h1>
-            <p>Edit general information and branding for your workspace.</p>
-
-            <p class="task-meta">
-                Current workspace: <strong>{{ workspace.name }}</strong>
-            </p>
+            <h1>Create Workspace</h1>
+            
         </div>
 
         <div class="hero-actions">
-            <a href="" class="btn btn-outline">
-                Back to Workspace
+            <a href="{% url 'dashboard' %}" class="btn btn-outline">
+                Back to Dashboard
             </a>
         </div>
 
@@ -121,26 +117,15 @@
             <div class="info-card">
                 <h3>Workspace Details</h3>
 
-                <p><strong>Created:</strong> {{ workspace.created_at|date:"M d, Y" }}</p>
-                <p><strong>Total Members:</strong> {{ workspace.members.count }}</p>
+                <p><strong>Created:</strong> NOW</p>
+                <p><strong>Total Members:</strong> 0</p>
 
                 <p style="margin-top:12px; line-height:1.6;">
-                    Edit your workspace information and keep it clean and recognizable for all members.
+                    You can create new workspace.
                 </p>
             </div>
 
 
-            <div class="info-card">
-                <h3>Danger Zone</h3>
-
-                <p style="margin-bottom:15px;">
-                    Deleting a workspace will permanently remove all projects, tasks, and members inside it.
-                </p>
-
-                <a href="" class="btn btn-warning" style="background:#dc3545; color:white;">
-                    Delete Workspace
-                </a>
-            </div>
 
         </div>
 

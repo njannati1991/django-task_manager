@@ -21,12 +21,10 @@ class Workspace(BaseModel):
     
     @classmethod
     def user_workspace_list(cls, user):
-        return cls.objects.filter(memberships__members= user).prefetch_related('memberships')
+        return cls.objects.filter(memberships__member= user).prefetch_related('memberships')
     
 
-    def total_members(self, user):
-        workspaces = self.user_workspace_list(user)
-        # members = 
+
     
 
 
@@ -38,7 +36,7 @@ class WorkspaceMember(BaseModel):
         MEMBER = "member", "Member"
         VIEWER = "viewer", "Viewer"
 
-    members = models.ForeignKey(User, on_delete=models.CASCADE, related_name='memberships')
+    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name='memberships')
 
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name="memberships")
 
@@ -47,7 +45,7 @@ class WorkspaceMember(BaseModel):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = ("members", "workspace")
+        unique_together = ("member", "workspace")
 
     def __str__(self):
         return f"{self.members.username} - {self.workspace} ({self.role})"

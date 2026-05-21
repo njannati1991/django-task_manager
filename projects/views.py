@@ -25,7 +25,7 @@ class ProjectCreateView(LoginRequiredMixin, WorkspacePermissionMixin, CreateView
 
     def dispatch(self, request, *args, **kwargs):
 
-        self.workspace = Workspace.objects.filter(id=self.kwargs['workspace_id'], memberships__members=request.user).first()
+        self.workspace = Workspace.objects.filter(id=self.kwargs['workspace_id'], memberships__member=request.user).first()
 
         if not self.workspace:
             raise Http404('Workspace not found.')
@@ -52,7 +52,7 @@ class ProjectUpdateView(LoginRequiredMixin,WorkspacePermissionMixin, UpdateView)
     model = Project
     context_object_name = 'project'
     template_name = 'projects/project_update.html'
-    fields = ['name', 'descriptions']
+    fields = ['name', 'description']
     pk_url_kwarg = 'project_id'
     
     def get_success_url(self):
@@ -83,7 +83,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
                     'tasks', queryset= Task.objects.filter(is_active=True)
                 )
             ).filter(
-                    workspace__memberships__members = self.request.user,
+                    workspace__memberships__member = self.request.user,
                 )
     
     def get_context_data(self, **kwargs):

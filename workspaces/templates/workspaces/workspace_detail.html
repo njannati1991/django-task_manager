@@ -72,8 +72,8 @@
                         {% for membership in workspace.memberships.all %}
                             <div class="member-item">
                                 <div class="member-info">
-                                    <h4>{{ membership.members.username }}</h4>
-                                    <p>{{ membership.members.email }}</p>
+                                    <h4>{{ membership.member.username }}</h4>
+                                    <p>{{ membership.member.email }}</p>
                                 </div>
 
                                 <span class="role-badge role-{{ membership.role }}">
@@ -82,7 +82,7 @@
 
                                 <div class="section-header">
                     
-                                    <a href="{% url 'update-member' workspace.pk membership.members.username %}" class="btn btn-sm btn-outline">Edit Member</a>
+                                    <a href="{% url 'update-member' workspace.pk membership.member.username %}" class="btn btn-sm btn-outline">Edit Member</a>
                                 </div>
 
                             </div>
